@@ -1,12 +1,13 @@
 package com.profile.profilebe.controllers;
 
+import com.profile.profilebe.exceptions.EmptyFieldsException;
+import com.profile.profilebe.exceptions.UsernameAlreadyExistsException;
 import com.profile.profilebe.pojo.User;
 import com.profile.profilebe.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 public class UsersController {
@@ -21,10 +22,20 @@ public class UsersController {
     @RequestMapping(method = RequestMethod.POST, path = "/signup")
     @ResponseBody
     @CrossOrigin(origins = ORIGIN_URL)
-    public ResponseEntity<String> createUser(@RequestBody User user){
-        usersService.createUser(user);
+    public ResponseEntity<String> signup(@RequestBody User user){
 
-        return ResponseEntity.status(HttpStatus.OK).body("OK");
+        try {
+            usersService.createUser(user);
+        }catch (UsernameAlreadyExistsException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Este e-mail já está cadastrado.");
+        }catch (EmptyFieldsException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Todos os campos obrigatórios devem ser preenchidos");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Usuário cadastrado com sucesso.");
     }
 
 }

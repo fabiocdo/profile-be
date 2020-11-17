@@ -1,11 +1,22 @@
 package com.profile.profilebe.pojo;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.IndexDirection;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
+
+@Document(collection = "user")
 public class User {
 
+    @Id
+    private String id;
     private String nome;
     private String sobrenome;
+    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     private String email;
-    private String dataDeNascimento;
+    private Date dataDeNascimento;
     private String sexo;
     private String cep;
     private String logradouro;
@@ -15,6 +26,14 @@ public class User {
     private String cidade;
     private String uf;
     private String senha;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNome() {
         return nome;
@@ -40,11 +59,11 @@ public class User {
         this.email = email;
     }
 
-    public String getDataDeNascimento() {
+    public Date getDataDeNascimento() {
         return dataDeNascimento;
     }
 
-    public void setDataDeNascimento(String dataDeNascimento) {
+    public void setDataDeNascimento(Date dataDeNascimento) {
         this.dataDeNascimento = dataDeNascimento;
     }
 
