@@ -2,6 +2,7 @@ package com.profile.profilebe.services;
 
 import com.profile.profilebe.exceptions.PasswordDoesntMatchException;
 import com.profile.profilebe.exceptions.EmptyFieldsException;
+import com.profile.profilebe.exceptions.UsernameNotFoundException;
 import com.profile.profilebe.pojo.Login;
 import com.profile.profilebe.pojo.User;
 import com.profile.profilebe.repositories.LoginRepository;
@@ -18,12 +19,13 @@ public class LoginService {
         this.loginRepository = loginRepository;
     }
 
-    public User getUserByCredentials(Login loginCredentials) throws PasswordDoesntMatchException, EmptyFieldsException {
+    public User getUserByCredentials(Login loginCredentials) throws PasswordDoesntMatchException,
+            UsernameNotFoundException {
 
         Login fetchedLogin = loginRepository.findLoginByEmail(loginCredentials.getEmail());
 
         if(fetchedLogin == null){
-            throw new EmptyFieldsException("Usuário não encontrado");
+            throw new UsernameNotFoundException("Usuário não existe.");
         }
 
         if(!loginCredentials.getSenha().equals(fetchedLogin.getSenha())) {
